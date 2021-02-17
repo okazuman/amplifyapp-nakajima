@@ -162,7 +162,7 @@ export default withAuthenticator(App);
 async function echo(chatCtl) {
     await chatCtl.addMessage({
       type: 'text',
-      content: `Please enter something.`,
+      content: `画像を入力してください`,
       self: false,
     });
     const file = (await chatCtl.setActionRequest({
@@ -219,7 +219,7 @@ async function echo(chatCtl) {
     });
     await chatCtl.addMessage({
       type: 'text',
-      content: '郵便物の宛先を入力して下さい',
+      content: '郵便物の宛先氏名を入力して下さい',
       self: false,
     });
     const adress = await chatCtl.setActionRequest({
@@ -247,16 +247,16 @@ async function echo(chatCtl) {
     });
     await chatCtl.addMessage({
       type: 'text',
-      content: '差出人名前を入力してください',
+      content: '差出人担当者を入力してください',
       self: false,
     });
     const companyname = await chatCtl.setActionRequest({
       type: 'text',
-      placeholder: '差出人名前を入力してください',
+      placeholder: '差出人担当者を入力してください',
     });
     await chatCtl.addMessage({
       type: 'text',
-      content: `差出人名前:\n${companyname.value}`,
+      content: `差出人担当者:\n${companyname.value}`,
       self: false,
     });
     await chatCtl.addMessage({
