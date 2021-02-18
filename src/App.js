@@ -25,7 +25,7 @@ import {
 
 const today = new Date();
 
-const initialFormState = { name: '', description: '' }
+const initialFormState = { image: '', companyname: '' , name: ''}
 
 const muiTheme = createMuiTheme({
   palette: {
@@ -79,7 +79,7 @@ function App() {
   }
 
   async function createNote() {
-    if (!formData.name || !formData.description) return;
+    if (!formData.companyname || !formData.name) return;
     await API.graphql({ query: createNoteMutation, variables: { input: formData } });
     if (formData.image) {
       const image = await Storage.get(formData.image);
@@ -94,6 +94,7 @@ function App() {
     setNotes(newNotesArray);
     await API.graphql({ query: deleteNoteMutation, variables: { input: { id } }});
   }
+  
   async function onChange(e) {
   if (!e.target.files[0]) return
   const file = e.target.files[0];
@@ -149,6 +150,7 @@ function App() {
         <div className={classes.container}>
           <div className={classes.chat}>
             <MuiChat chatController={chatCtl} />
+            
           </div>
         </div>
       </div>
@@ -217,6 +219,7 @@ async function echo(chatCtl) {
       content: `宛先部署:\n${sel.value}`,
       self: false,
     });
+    
     await chatCtl.addMessage({
       type: 'text',
       content: '郵便物の宛先氏名を入力して下さい',
@@ -372,9 +375,14 @@ async function echo(chatCtl) {
     });
     await chatCtl.addMessage({
       type: 'text',
-      content: '登録してよろしいですか？',
+      content: '以下の内容で登録してよろしいですか？',
       self: false,
     });
+    await chatCtl.addMessage({
+        type: 'text',
+        content: `宛先部署:${sel.value}\n宛先指名:${adress.value}\n差出人会社名:${company.value}\n差出人担当者:${companyname.value}\n受託日:${receivedDate}\n郵便種別:${type.value}\n保管先:${place.value}\nその他:${other.value}`,
+        self: false,
+      });
     const last = await chatCtl.setActionRequest({
       type: 'select',
       options: [
@@ -389,11 +397,7 @@ async function echo(chatCtl) {
       ],
     });
     if(last.value=="はい"){
-      await chatCtl.addMessage({
-        type: 'text',
-        content: `宛先部署:${sel.value}\n宛先指名:${adress.value}\n差出人会社名:${company.value}\n差出人担当者:${companyname.value}\n受託日:${receivedDate}\n郵便種別:${type.value}\n保管先:${place.value}\nその他:${other.value}`,
-        self: false,
-      });
+      // createNote(sel.value,adress.value);
       await chatCtl.addMessage({
         type: 'text',
         content: '上記の内容で登録しました',
