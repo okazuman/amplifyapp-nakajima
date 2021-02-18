@@ -3,4 +3,10 @@ type Note @model {
   image: String
   companyname: String!
   name: String!
+  fromcompanyname: String!
+  fromname: String!
+  day: String!
+  importance: String!
+  put: String!
+  etc: String!
 }

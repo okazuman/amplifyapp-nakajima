@@ -8,6 +8,12 @@ export const getNote = /* GraphQL */ `
       image
       companyname
       name
+      fromcompanyname
+      fromname
+      day
+      importance
+      put
+      etc
       createdAt
       updatedAt
     }
@@ -25,6 +31,12 @@ export const listNotes = /* GraphQL */ `
         image
         companyname
         name
+        fromcompanyname
+        fromname
+        day
+        importance
+        put
+        etc
         createdAt
         updatedAt
       }

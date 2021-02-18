@@ -25,7 +25,22 @@ import {
 
 const today = new Date();
 
-const initialFormState = { image: '', companyname: '' , name: ''}
+const initialFormState = { 
+  image: '', 
+  companyname: '' , 
+  name: '', 
+  fromcompanyname: '', 
+  fromname: '',
+  day: '',
+  importance: '',
+  put: '',
+  etc:'',
+}
+var formData;
+var setFormData;
+var notes;
+var setNotes;
+
 
 const muiTheme = createMuiTheme({
   palette: {
@@ -57,9 +72,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+  async function createNote() {
+    await API.graphql({ query: createNoteMutation, variables: { input: formData } });
+    setNotes([ ...notes, formData ]);
+    setFormData(initialFormState);
+  }
 function App() {
-  const [notes, setNotes] = useState([]);
-  const [formData, setFormData] = useState(initialFormState);
+  [notes, setNotes] = useState([]);
+  [formData, setFormData] = useState(initialFormState);
 
   useEffect(() => {
     fetchNotes();
@@ -78,16 +98,11 @@ function App() {
   setNotes(apiData.data.listNotes.items);
   }
 
-  async function createNote() {
-    if (!formData.companyname || !formData.name) return;
-    await API.graphql({ query: createNoteMutation, variables: { input: formData } });
-    if (formData.image) {
-      const image = await Storage.get(formData.image);
-      formData.image = image;
-    }
-    setNotes([ ...notes, formData ]);
-    setFormData(initialFormState);
-  }
+  // async function createNote() {
+  //   await API.graphql({ query: createNoteMutation, variables: { input: formData } });
+  //   setNotes([ ...notes, formData ]);
+  //   setFormData(initialFormState);
+  // }
 
   async function deleteNote({ id }) {
     const newNotesArray = notes.filter(note => note.id !== id);
@@ -397,7 +412,18 @@ async function echo(chatCtl) {
       ],
     });
     if(last.value=="はい"){
-      // createNote(sel.value,adress.value);
+      setFormData({
+        "image":file.value,
+        "companyname":sel.value,
+        "name":adress.value,
+        "fromcompanyname":company.value,
+        "fromname":companyname.value,
+        "day":receivedDate,
+        "importance":type.value,
+        "put":place.value,
+        "etc":other.value,
+      })
+      createNote();
       await chatCtl.addMessage({
         type: 'text',
         content: '上記の内容で登録しました',
